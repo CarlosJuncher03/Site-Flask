@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Cor de fundo */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            background: #fff; /* Fundo branco */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .chart-container {
+            width: 40%; /* Largura do gráfico, agora metade do tamanho */
+            margin-bottom: 20px;
+            
+        }
+
+        h2 {
+            text-align: center;
+            color: #043674; /* Cor azul */
+            margin-bottom: 20px;
+            flex: 1; /* Para expandir e ocupar o espaço disponível */
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 20%;
+            padding: 8px;
+            border: 1px solid #ccc; /* Borda cinza */
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            border: 1px solid #dddddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #043674; /* Cor azul */
+            color: #fff; /* Cor do texto branco */
+        }
+
+        .btn-info {
+            background-color: #043674; /* Cor azul */
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 4px;
+            flex: 0; /* Para não expandir */
+            width: 120px;
+        }
+
+        .btn-info:hover {
+            background-color: #0056b3; /* Cor azul mais escura ao passar o mouse */
+        }
+        
+
+        .graficos-gerais {
+            text-align: center;
+            width: 90%;
+            margin-bottom: 20px;
+            background: #fff; /* Fundo branco */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            margin: 20px auto;
+        }
+
+        .graficos-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Adicionando estilos para responsividade */
+        @media only screen and (max-width: 768px) {
+            .chart-container {
+                width: 100%; /* Define a largura de 100% para que os gráficos ocupem toda a largura em dispositivos menores */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h2>BEM-VINDO {{ username }}</h2>
+            <p>Endereço: {{ endereco }}</p>
+            <p>Bairro: {{ bairro }}</p>
+            <p>Número: {{ numero }}</p>
+            <p>Email: {{ email }}</p>
+            <h3>Atendimentos do Cliente</h3>
+            <div>
+                <h3 style="margin-bottom: 0;">Filtrar por Status:</h3>
+                <select id="statusFilter" onchange="filterTable()">
+                    <option value="">Todos</option>
+                    <option value="Aberto">Aberto</option>
+                    <option value="Atendimento">Atendimento</option>
+                    <option value="AguardandoRetorno">Aguardando Retorno</option>
+                    <option value="PROGRAMACAO_MATRIZ">Programação Matriz</option>
+                    <option value="Concluido">Concluído</option>
+                    <!-- Adicione mais opções de status conforme necessário -->
+                </select>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center;margin-bottom: 250px;">
+            <a href="/" class="btn-info" style="margin-left: auto;">Sair</a>
+        </div>
+       
+        <table id="atendimentosTable">
+            <tr>
+                <th>Código do Atendimento</th>
+                <th>Data de abertura</th>
+                <th>Responsavel</th>
+                <th>Nome do Solicitante</th>
+                <th>Status</th>
+                <th>Solicitação</th>
+                <th>Prioridade</th>
+                <th>Data da conclusão</th>
+                <th>Informações ticket</th>
+                <th>Suporte</th>
+            </tr>
+            {% for atendimento in atendimentos_cliente %}
+            <tr>
+                <td>{{ atendimento[0] }}</td>
+                <td>{{ atendimento[1] }}</td>
+                <td>{{ atendimento[2] }}</td>
+                <td>{{ atendimento[3] }}</td>
+                <td>{{ atendimento[4] }}</td>
+                <td>{{ atendimento[5] }}</td>
+                <td>{{ atendimento[6] }}</td>
+                <td>{{ atendimento[7] }}</td>
+                <td><button class="btn-info" onclick="mostrarDetalhes({{ atendimento[0] }})">Informações</button></td>
+                <td><button class="btn-info" onclick="abrirConversaWhatsApp('{{ atendimento[0] }}')">Dúvida</button></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="graficos-gerais">
+        <h3>Gráficos Gerais</h3>
+        <div class="graficos-container">
+            <div class="chart-container">
+                <canvas id="ticketsAbertosChart" width="300" height="300"></canvas>
+                <p class="total">Quantidade de tickets abertos: {{ quant_tickets_abertos }}</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="totalTicketsChart" width="300" height="300"></canvas>
+                <p class="total">Quantidade total de tickets: {{ quant_total_tickets }}</p>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dados de exemplo para os gráficos
+        var quantTicketsAbertos = {{ quant_tickets_abertos }};
+        var quantTotalTickets = {{ quant_total_tickets }};
+
+        // Configuração do gráfico de rosca para quantidade de tickets abertos
+        var ticketsAbertosChartCtx = document.getElementById('ticketsAbertosChart').getContext('2d');
+        var ticketsAbertosChart = new Chart(ticketsAbertosChartCtx, {
+            type: 'doughnut', // Gráfico de rosca
+            data: {
+                labels: ['Abertos', 'Fechados'],
+                datasets: [{
+                    label: 'Tickets Abertos',
+                    data: [quantTicketsAbertos, quantTotalTickets - quantTicketsAbertos],
+                    backgroundColor: ['#043674', '#f0f0f0'],
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Tickets Abertos'
+                }
+            }
+        });
+
+        // Configuração do gráfico de rosca para quantidade total de tickets
+        var totalTicketsChartCtx = document.getElementById('totalTicketsChart').getContext('2d');
+        var totalTicketsChart = new Chart(totalTicketsChartCtx, {
+            type: 'doughnut', // Gráfico de rosca
+            data: {
+                labels: ['Abertos', 'Fechados'],
+                datasets: [{
+                    label: 'Total de Tickets',
+                    data: [quantTotalTickets, 0],
+                    backgroundColor: ['#043674', '#f0f0f0'],
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Total de Tickets'
+                }
+            }
+        });
+    </script>
+    <script>
+        function filterTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("statusFilter");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("atendimentosTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4]; // Coluna do status
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1 || filter === "") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function mostrarDetalhes(codigoAtendimento) {
+            // Fazer uma requisição AJAX para obter as informações do atendimento
+            fetch(`/detalhes_atendimento/${codigoAtendimento}`)
+            .then(response => response.text())
+            .then(html => {
+                // Abrir uma nova janela pop-up com as informações do atendimento
+                const detalhesWindow = window.open('', 'Detalhes do Atendimento', 'width=600,height=400');
+                detalhesWindow.document.body.innerHTML = html;
+            });
+        }
+    </script> 
+    <script>
+        function abrirConversaWhatsApp(codigoAtendimento) {
+            // Verificar se o código do atendimento é válido
+            if (codigoAtendimento !== null && codigoAtendimento !== undefined && codigoAtendimento !== "None") {
+                // Número de telefone para o qual você deseja enviar a mensagem via WhatsApp
+                var numeroTelefone = "+556699431117";
+                // Mensagem que você deseja enviar junto com o código do atendimento
+                var mensagem = "Tenho dúvida referente a esse atendimento: " + codigoAtendimento;
+                // URL para o WhatsApp com o número de telefone e mensagem
+                var url = "https://wa.me/" + numeroTelefone + "?text=" + encodeURIComponent(mensagem);
+                // Abrir a URL em uma nova janela
+                window.open(url);
+            } else {
+                // Caso o código do atendimento seja inválido, exibir uma mensagem de erro
+                alert("Não foi possível encontrar um código de atendimento válido.");
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Atendimento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Cor de fundo */
+            margin: 0;
+            padding: 0;
+            color: black; /* Cor do texto preto */
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff; /* Cor azul */
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: black; /* Cor do texto preto */
+        }
+
+        .destaque {
+            font-size: 18px; /* Tamanho de fonte maior */
+        }
+    </style>
+</head>
+<body>
+    <h2>Detalhes do Atendimento</h2>
+    <p><span class="destaque">Solicitação:</span> {{ informacoes.Solicitacao }}</p>
+    <p><span class="destaque">Execução:</span> {{ informacoes.Execucao }}</p>
+</body>
+</html>
