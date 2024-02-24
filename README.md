@@ -25,7 +25,7 @@ Para executar o aplicativo localmente, siga estas etapas:
 1. Certifique-se de ter o Python instalado em seu sistema. Recomenda-se a versão 3.x.
 2. Clone este repositório em seu ambiente local.
 3. Navegue até o diretório do projeto.
-4. Instale as dependências usando o comando `pip install -r requirements.txt`.
+4. Instale as dependências usando o comando.
 5. Configure as informações de conexão com o banco de dados SQL Server no arquivo `conex_sql_sever.py`.
 6. Execute o aplicativo com o comando `python main.py`.
 7. Abra um navegador da web e acesse `http://localhost:5000` para visualizar os tickets.
